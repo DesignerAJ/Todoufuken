@@ -1,21 +1,29 @@
 import { useState } from 'react';
-import InfoCard from './components/InfoCard';
+import MapPopup from './components/MapPopup';
 import JapanMap from './components/JapanMap';
 import { prefectures } from './data/prefectures';
 import './App.css';
 
 function App() {
   const [selectedPrefecture, setSelectedPrefecture] = useState(null);
+  const [popupPosition, setPopupPosition] = useState(null);
   const [mode, setMode] = useState('learn'); // 'learn' or 'quiz'
   const [quizTarget, setQuizTarget] = useState(null);
   const [score, setScore] = useState(0);
   const [message, setMessage] = useState('');
 
-  const handlePrefectureClick = (prefectureCode) => {
+  const handlePrefectureClick = (prefectureCode, position) => {
     const prefecture = prefectures.find(p => p.code === parseInt(prefectureCode));
 
     if (mode === 'learn') {
-      setSelectedPrefecture(prefecture);
+      // Toggle selection if clicking the same prefecture
+      if (selectedPrefecture && selectedPrefecture.code === prefecture.code) {
+        setSelectedPrefecture(null);
+        setPopupPosition(null);
+      } else {
+        setSelectedPrefecture(prefecture);
+        setPopupPosition(position);
+      }
     } else if (mode === 'quiz' && quizTarget) {
       if (prefecture.code === quizTarget.code) {
         setScore(prev => prev + 1);
@@ -34,6 +42,7 @@ function App() {
     const randomPrefecture = prefectures[Math.floor(Math.random() * prefectures.length)];
     setQuizTarget(randomPrefecture);
     setSelectedPrefecture(null);
+    setPopupPosition(null);
     setMessage('');
   };
 
@@ -41,6 +50,7 @@ function App() {
     const newMode = mode === 'learn' ? 'quiz' : 'learn';
     setMode(newMode);
     setSelectedPrefecture(null);
+    setPopupPosition(null);
     if (newMode === 'quiz') {
       setScore(0);
       startQuiz();
@@ -50,11 +60,16 @@ function App() {
     }
   };
 
+  const handlePopupClose = () => {
+    setSelectedPrefecture(null);
+    setPopupPosition(null);
+  }
+
   return (
     <div id="app-container">
       <header>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <h1 className="title">일본 도도부현 지명 학습</h1>
+          <h1 className="title">일본 도도부현 명칭 암기</h1>
         </div>
         <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           {mode === 'quiz' && (
@@ -74,7 +89,7 @@ function App() {
 
       <main>
         <div style={{
-          flex: 1,
+          width: '100%',
           height: '100%',
           display: 'flex',
           justifyContent: 'center',
@@ -105,22 +120,29 @@ function App() {
               {message}
             </div>
           )}
-        </div>
 
-        <aside style={{
-          width: '380px',
-          padding: '2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          borderLeft: '1px solid rgba(255, 255, 255, 0.05)',
-          backgroundColor: 'rgba(15, 23, 42, 0.3)'
-        }}>
-          <InfoCard
-            selectedPrefecture={selectedPrefecture}
-            mode={mode}
-            onClose={() => setSelectedPrefecture(null)}
+          {/* 학습 모드 팝업 */}
+          <MapPopup
+            prefecture={selectedPrefecture}
+            position={popupPosition}
+            onClose={handlePopupClose}
           />
-        </aside>
+
+          {/* 학습 모드 안내 (선택된 것 없을 때) */}
+          {mode === 'learn' && !selectedPrefecture && (
+            <div style={{
+              position: 'absolute',
+              bottom: '2rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              color: 'rgba(255,255,255,0.5)',
+              fontSize: '0.9rem',
+              pointerEvents: 'none'
+            }}>
+              지도의 지역을 클릭하여 상세 정보를 확인하세요
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

@@ -21,6 +21,14 @@ const JapanMap = ({ onPrefectureClick, activePrefectureCode, quizTargetCode, mod
         if (!containerRef.current || !svgContent) return;
 
         const prefectures = containerRef.current.querySelectorAll('.prefecture');
+
+        // Cleanup decoration elements: remove 'prefecture' class to prevent hover effects
+        const decorations = containerRef.current.querySelectorAll('#line71, #g72');
+        decorations.forEach(el => {
+            el.classList.remove('prefecture');
+            el.style.pointerEvents = 'none'; // Ensure no interactions
+        });
+
         prefectures.forEach(el => {
             const code = parseInt(el.dataset.code);
 
@@ -40,7 +48,8 @@ const JapanMap = ({ onPrefectureClick, activePrefectureCode, quizTargetCode, mod
         // Traverse up to find the group with data-code
         const target = e.target.closest('.prefecture');
         if (target && target.dataset.code) {
-            onPrefectureClick(target.dataset.code);
+            // Pass both code and click position
+            onPrefectureClick(target.dataset.code, { x: e.clientX, y: e.clientY });
         }
     };
 
