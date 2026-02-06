@@ -152,6 +152,8 @@ main {
   display: flex;
   overflow: hidden;
   position: relative;
+  padding: 0;
+  /* Remove padding */
 }
 
 .title {
@@ -162,4 +164,57 @@ main {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 1.8rem;
+    margin-bottom: 0.2rem;
+  }
+
+  /* Container for switch and quiz info in App.jsx */
+  .header-controls {
+    flex-direction: column !important;
+    width: 100%;
+    align-items: center;
+    gap: 1.2rem !important;
+  }
+
+  .mode-switch {
+    width: 90%;
+    max-width: 320px;
+    height: 50px;
+    flex-shrink: 0;
+  }
+
+  .mode-switch-item {
+    font-size: 1rem;
+    white-space: nowrap;
+    /* Prevent "학습 모드" text wrapping */
+  }
+
+  .quiz-info-panel {
+    width: 90%;
+    max-width: 320px;
+    justify-content: center;
+    padding: 0.6rem 1rem !important;
+  }
+
+  main {
+    padding: 0;
+  }
+
+  .japan-map-container {
+    padding: 0;
+    width: 100vw;
+    height: calc(100vh - 200px);
+    /* Space for header */
+  }
 }

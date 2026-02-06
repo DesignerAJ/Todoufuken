@@ -6,12 +6,14 @@ const MapPopup = ({ prefecture, position, onClose }) => {
     const getLayout = () => {
         if (!position) return null;
 
-        const cardWidth = 320;
+        const screenWidth = window.innerWidth;
+        const isMobile = screenWidth < 768;
+        const cardWidth = isMobile ? Math.min(280, screenWidth - 40) : 320;
         const cardHeight = 350; // 여유 있게 잡음
-        const margin = 20;
+        const margin = 10;
 
-        const distanceX = 60;
-        const distanceY = 80;
+        const distanceX = isMobile ? 20 : 60;
+        const distanceY = isMobile ? 40 : 80;
 
         let left = position.x + distanceX;
         let top = position.y - distanceY - (cardHeight / 2);
@@ -19,7 +21,7 @@ const MapPopup = ({ prefecture, position, onClose }) => {
         let isLeftPlacement = false;
 
         // Right boundary check
-        if (left + cardWidth > window.innerWidth - margin) {
+        if (left + cardWidth > screenWidth - margin) {
             left = position.x - distanceX - cardWidth;
             isLeftPlacement = true;
         }
@@ -37,7 +39,7 @@ const MapPopup = ({ prefecture, position, onClose }) => {
             top = window.innerHeight - cardHeight - margin;
         }
 
-        return { top, left, isLeftPlacement };
+        return { top, left, isLeftPlacement, cardWidth };
     };
 
     const layout = getLayout();
@@ -48,7 +50,7 @@ const MapPopup = ({ prefecture, position, onClose }) => {
 
     // Anchor point calculation
     const cardAnchorY = layout.top + 100;
-    const cardAnchorX = layout.isLeftPlacement ? layout.left + 320 : layout.left;
+    const cardAnchorX = layout.isLeftPlacement ? layout.left + layout.cardWidth : layout.left;
 
     const lineEnd = { x: cardAnchorX, y: cardAnchorY };
 

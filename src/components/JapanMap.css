@@ -17,91 +17,53 @@
 .japan-map-container svg {
     width: 100%;
     height: 100%;
-    max-width: 100%;
-    /* Limit max width for better view on large screens */
-    max-height: 95vh;
     filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.2));
     overflow: visible;
-    /* Allow hover effects to spill over */
 }
 
-/* Remove the default background rect if present or style the main group */
-.geolonia-svg-map {
-    background: transparent;
-}
-
+/* 기본 도도부현 스타일 */
 .prefecture {
     fill: var(--color-map-default);
     stroke: var(--color-bg-main);
-    /* Match bg for cleaner borders */
-    stroke-width: 0.5px;
-    transition: fill 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+    stroke-width: 0.8px;
+    vector-effect: non-scaling-stroke;
+    paint-order: stroke fill;
+    transition: fill 0.2s, stroke 0.2s;
     cursor: pointer;
-    outline: none;
-    /* Remove focus outline */
 }
 
-/* Decoration lines - ignore mouse events */
-#line71,
-.decoration-line {
-    pointer-events: none !important;
-    filter: none !important;
-    stroke: rgb(79, 100, 194) !important;
-    stroke-width: 2px !important;
-    transition: none !important;
-    /* Stop inherited transitions */
+/* 자식 요소(조각들)가 스타일을 강제 상속받도록 함 */
+.prefecture path,
+.prefecture polygon {
+    fill: inherit !important;
+    stroke: inherit !important;
+    stroke-width: inherit !important;
 }
 
-/* Map Interactions */
+/* 호버 상태 (차상위) */
 .prefecture:hover {
-    fill: var(--color-map-hover);
-    stroke: var(--color-text-primary);
-    stroke-width: 1px;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-    transition: fill 0.1s ease, stroke 0.1s ease;
+    fill: #cbd5e1 !important;
+    stroke: #ffffff !important;
+    stroke-width: 1.5px !important;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
 }
 
-.mode-quiz .prefecture:hover {
-    cursor: crosshair;
-}
-
+/* 활성 상태 (최상단) */
 .prefecture.is-active {
     fill: var(--color-accent) !important;
-    stroke: white !important;
-    stroke-width: 1.5px !important;
-    filter: drop-shadow(0 0 20px var(--color-accent-glow)) !important;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    stroke: #ffffff !important;
+    stroke-width: 2.5px !important;
+    filter: drop-shadow(0 0 15px var(--color-accent-glow)) !important;
 }
 
-/* If we want to show correct answer on mismatch */
-.prefecture.is-correct-flash {
-    animation: flashSuccess 1s ease;
+/* 분리선 및 기타 장식 */
+.boundary-line,
+#g72 {
+    pointer-events: none !important;
 }
 
-.prefecture.is-wrong-flash {
-    animation: flashError 0.5s ease;
-}
-
-@keyframes flashSuccess {
-
-    0%,
-    100% {
-        fill: var(--color-map-default);
-    }
-
-    50% {
-        fill: var(--color-success);
-    }
-}
-
-@keyframes flashError {
-
-    0%,
-    100% {
-        fill: var(--color-map-default);
-    }
-
-    50% {
-        fill: var(--color-error);
-    }
+#line71 {
+    stroke: rgba(255, 255, 255, 0.2) !important;
+    stroke-width: 1px !important;
+    pointer-events: none !important;
 }
