@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import japanMapUrl from '../assets/japan.svg';
+import { prefectures } from '../data/prefectures';
 import './JapanMap.css';
 
 const JapanMap = ({ onPrefectureClick, activePrefectureCode, quizTargetCode, mode, onInteractionStart }) => {
@@ -11,7 +12,35 @@ const JapanMap = ({ onPrefectureClick, activePrefectureCode, quizTargetCode, mod
     useEffect(() => {
         fetch(japanMapUrl)
             .then(res => res.text())
-            .then(data => setSvgContent(data));
+            .then(data => {
+                // SVG 로드 시 한 번만 각 도도부현에 지방(Region) 클래스 주입
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data, 'image/svg+xml');
+                const prefElements = doc.querySelectorAll('.prefecture');
+
+                prefElements.forEach(el => {
+                    const code = parseInt(el.dataset.code);
+                    const prefData = prefectures.find(p => p.code === code);
+                    if (prefData) {
+                        const regionMap = {
+                            "홋카이도": "hokkaido",
+                            "도호쿠": "tohoku",
+                            "간토": "kanto",
+                            "주부": "chubu",
+                            "긴키": "kinki",
+                            "주고쿠": "chugoku",
+                            "시코쿠": "shikoku",
+                            "규슈": "kyushu"
+                        };
+                        const regionClass = regionMap[prefData.region];
+                        if (regionClass) {
+                            el.classList.add(`region-${regionClass}`);
+                        }
+                    }
+                });
+
+                setSvgContent(doc.documentElement.outerHTML);
+            });
     }, []);
 
     const syncZOrder = (hoveredNode = null) => {
@@ -46,8 +75,8 @@ const JapanMap = ({ onPrefectureClick, activePrefectureCode, quizTargetCode, mod
         if (!svgContainerRef.current || !svgContent) return;
         const container = svgContainerRef.current;
 
-        const prefectures = container.querySelectorAll('.prefecture');
-        prefectures.forEach(el => {
+        const prefElements = container.querySelectorAll('.prefecture');
+        prefElements.forEach(el => {
             const code = parseInt(el.dataset.code);
             el.classList.toggle('is-active', code === activePrefectureCode);
 

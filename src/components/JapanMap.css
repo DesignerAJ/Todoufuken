@@ -67,3 +67,38 @@
     stroke-width: 1px !important;
     pointer-events: none !important;
 }
+
+/* 지방(Region) 별 미묘한 배경색 구분 */
+.prefecture.region-hokkaido {
+    fill: #47586b;
+}
+
+.prefecture.region-tohoku {
+    fill: #475a51;
+}
+
+.prefecture.region-kanto {
+    fill: #5e5161;
+}
+
+.prefecture.region-chubu {
+    fill: #615e42;
+}
+
+.prefecture.region-kinki {
+    fill: #694d4d;
+}
+
+.prefecture.region-chugoku {
+    fill: #58614a;
+}
+
+.prefecture.region-shikoku {
+    fill: #47666b;
+}
+
+.prefecture.region-kyushu {
+    fill: #685c53;
+}
+
+/* 퀴즈 정답/오답 애니메이션 등 추가 가능 */
