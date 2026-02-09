@@ -3,7 +3,7 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import japanMapUrl from '../assets/japan.svg';
 import './JapanMap.css';
 
-const JapanMap = ({ onPrefectureClick, activePrefectureCode, quizTargetCode, mode }) => {
+const JapanMap = ({ onPrefectureClick, activePrefectureCode, quizTargetCode, mode, onInteractionStart }) => {
     const [svgContent, setSvgContent] = useState('');
     const svgContainerRef = useRef(null);
     const isMobile = window.innerWidth < 768;
@@ -73,6 +73,12 @@ const JapanMap = ({ onPrefectureClick, activePrefectureCode, quizTargetCode, mod
         }
     };
 
+    const handleInteractionStart = () => {
+        if (activePrefectureCode && onInteractionStart) {
+            onInteractionStart();
+        }
+    };
+
     return (
         <div className="japan-map-container">
             <TransformWrapper
@@ -83,6 +89,9 @@ const JapanMap = ({ onPrefectureClick, activePrefectureCode, quizTargetCode, mod
                 wheel={{ step: 0.1 }}
                 doubleClick={{ disabled: true }}
                 panning={{ velocityDisabled: true }}
+                onPanningStart={handleInteractionStart}
+                onZoomingStart={handleInteractionStart}
+                onWheelStart={handleInteractionStart}
             >
                 <TransformComponent
                     wrapperStyle={{ width: "100%", height: "100%", overflow: "hidden" }}

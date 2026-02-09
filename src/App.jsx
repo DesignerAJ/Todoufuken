@@ -69,7 +69,7 @@ function App() {
     <div id="app-container">
       <header>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <h1 className="title">일본 도도부현 명칭 암기</h1>
+          <h1 className="title">일본 도도부현 명칭</h1>
         </div>
         <div className="header-controls" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
           <div className={`mode-switch ${mode}`} onClick={toggleMode}>
@@ -93,6 +93,7 @@ function App() {
           activePrefectureCode={selectedPrefecture?.code}
           quizTargetCode={quizTarget?.code}
           mode={mode}
+          onInteractionStart={handlePopupClose}
         />
 
         {message && (
