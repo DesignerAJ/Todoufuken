@@ -34,6 +34,9 @@ function App() {
         }, 1500);
       } else {
         setMessage('틀렸습니다. 다시 시도해보세요.');
+        setTimeout(() => {
+          setMessage('');
+        }, 1500);
       }
     }
   };
@@ -77,13 +80,6 @@ function App() {
             <div className={`mode-switch-item ${mode === 'learn' ? 'active' : ''}`}>학습 모드</div>
             <div className={`mode-switch-item ${mode === 'quiz' ? 'active' : ''}`}>퀴즈 모드</div>
           </div>
-
-          {mode === 'quiz' && (
-            <div className="glass-panel quiz-info-panel" style={{ padding: '0.4rem 1.2rem', display: 'flex', gap: '1.5rem', alignItems: 'center', border: '1px solid var(--color-success)' }}>
-              <span style={{ fontSize: '0.9rem' }}>SCORE: <strong style={{ color: 'var(--color-success)', fontSize: '1.1rem' }}>{score}</strong></span>
-              {quizTarget && <span style={{ fontSize: '0.9rem' }}>TARGET: <strong style={{ color: 'var(--color-accent)', fontSize: '1.1rem' }}>{quizTarget.name_ko}</strong></span>}
-            </div>
-          )}
         </div>
       </header>
 
@@ -96,18 +92,26 @@ function App() {
           onInteractionStart={handlePopupClose}
         />
 
+        {mode === 'quiz' && (
+          <div className="glass-panel quiz-info-panel map-overlay-top" style={{ padding: '0.6rem 1.5rem', display: 'flex', gap: '2rem', alignItems: 'center', border: '1px solid var(--color-success)', zIndex: 50 }}>
+            <span style={{ fontSize: '1rem' }}>점수: <strong style={{ color: 'var(--color-success)', fontSize: '1.2rem' }}>{score}</strong></span>
+            {quizTarget && <span style={{ fontSize: '1rem' }}>찾을 지역: <strong style={{ color: 'var(--color-accent)', fontSize: '1.2rem' }}>{quizTarget.name_ko}</strong></span>}
+          </div>
+        )}
+
         {message && (
-          <div className="glass-panel" style={{
+          <div className="glass-panel quiz-result-message" style={{
             position: 'absolute',
-            top: '2rem',
+            top: '50%',
             left: '50%',
-            transform: 'translateX(-50%)',
-            padding: '0.8rem 1.5rem',
-            fontSize: '1.1rem',
+            transform: 'translate(-50%, -50%)',
+            padding: '1.5rem 3rem',
+            fontSize: '1.8rem',
             fontWeight: 'bold',
             color: message.includes('정답') ? 'var(--color-success)' : 'var(--color-error)',
-            zIndex: 100,
-            boxShadow: '0 10px 25px rgba(0,0,0,0.3)'
+            zIndex: 150,
+            boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+            border: `2px solid ${message.includes('정답') ? 'var(--color-success)' : 'var(--color-error)'}`
           }}>
             {message}
           </div>
